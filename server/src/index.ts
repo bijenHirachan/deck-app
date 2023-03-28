@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import mongoose from "mongoose";
-import Deck from "../models/Deck";
+import deckRoutes from "../routes/deckRoutes";
 import { config } from "dotenv";
 import cors from "cors";
 
@@ -26,31 +26,7 @@ const connectDB = async () => {
 };
 connectDB();
 
-app.get("/decks", async (req: Request, res: Response) => {
-  const decks = await Deck.find();
-
-  return res.status(200).json(decks);
-});
-
-app.delete("/decks/:id", async (req: Request, res: Response) => {
-  const { id } = req.params;
-
-  await Deck.findByIdAndDelete(id);
-
-  return res.status(200).json({
-    success: true,
-    message: "Deck deleted successfully",
-  });
-});
-
-app.post("/decks", async (req: Request, res: Response) => {
-  const { title } = req.body;
-  const deck = await Deck.create({ title });
-
-  return res.status(201).json({
-    deck,
-  });
-});
+app.use("/", deckRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server listening on PORT: ${PORT}`);
