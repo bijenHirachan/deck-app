@@ -29,8 +29,17 @@ connectDB();
 app.get("/decks", async (req: Request, res: Response) => {
   const decks = await Deck.find();
 
+  return res.status(200).json(decks);
+});
+
+app.delete("/decks/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  await Deck.findByIdAndDelete(id);
+
   return res.status(200).json({
-    decks,
+    success: true,
+    message: "Deck deleted successfully",
   });
 });
 
